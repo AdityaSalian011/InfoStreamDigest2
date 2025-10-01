@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News Feed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    .container {
+      width: 100%;
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .stock-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .stock-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid #e5e7eb;
+      background-color: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .weather-widget {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      padding: 1rem 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .button-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .button {
+      font-weight: bold;
+      font-size: 1.5rem;
+      background-color: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      border-radius: 1rem;
+      padding: 1rem;
+      border: 1px solid #e5e7eb;
+    }
+    .article {
+      background-color: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e5e7eb;
+    }
+    .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 1rem;
+    }
+    .section {
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      margin-bottom: 0.25rem;
+    }
+    .section-content {
+      color: #374151;
+    }
+    .green { color: #059669; }
+    .red { color: #dc2626; }
+    .italic { font-style: italic; }
+    .capitalize { text-transform: capitalize; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Market Ticker Strip -->
+    <div class="stock-container">
+      {% for info in stock_info %}
+        {% set latest = info.info[0] %}
+        {% set absolute = info.info[1] %}
+        {% set percent = info.info[2] %}
+        <div class="stock-item">
+          <!-- Stock Name -->
+          <div style="font-weight: 500; color: #1f2937;">{{info.name}}</div>
+
+          <!-- Price + Change -->
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span class="{% if absolute|float >= 0 %}green{% else %}red{% endif %}" style="font-weight: 500;">
+              {% if absolute|float >= 0 %}▲{% else %}▼{% endif %}
+              {{absolute}} ({{percent}}%)
+            </span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Weather Widget -->
+    <div class="weather-widget">
+      <img src="{{weather_icon_url}}" alt="Weather Icon" style="width: 3rem; height: 3rem;">
+      <div>
+        <p class="capitalize" style="color: #374151; font-weight: 500;">{{weather_info.status}}</p>
+        <p style="font-size: 0.875rem; color: #4b5563;">
+          Temp: {{weather_info.temp}}°C • Feels like: {{weather_info.feels_like}}°C • Humidity: {{weather_info.humidity}}%
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width: 56rem; margin: 0 auto; padding: 1rem 1rem 2rem 1rem;">
+    
+    {% for news_data in data %}
+      <div class="article">
+        
+        <!-- Title -->
+        <h1 class="title">
+          {{news_data.title}}
+        </h1>
+
+        <!-- Publish Date -->
+        <div class="section">
+          <div class="section-title">Publish Date</div>
+          {% if news_data.publish_date %}
+            <div class="section-content">{{news_data.publish_date}}</div>
+          {% else %}
+            <div class="section-content italic" style="color: #9ca3af;">No information</div>
+          {% endif %}
+        </div>
+
+        <!-- Authors -->
+        <div class="section">
+          <div class="section-title">Authors</div>
+          {% if news_data.authors %}
+            <div class="section-content">{{news_data.authors}}</div>
+          {% else %}
+            <div class="section-content italic" style="color: #9ca3af;">No information</div>
+          {% endif %}
+        </div>
+
+        <!-- Summary -->
+        <div class="section">
+          <div class="section-title">Summary</div>
+          <div class="section-content">{{news_data.summary}}</div>
+        </div>
+
+        <!-- Full Text -->
+        <div class="section">
+          <div class="section-title">Full Text</div>
+          <div class="section-content" style="white-space: pre-line;">{{news_data.text}}</div>
+        </div>
+
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

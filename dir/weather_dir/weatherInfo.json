@@ -1,0 +1,9 @@
+{
+    "weather_info": {
+        "status": "overcast clouds",
+        "temp": 24.69,
+        "feels_like": 25.54,
+        "humidity": 89
+    },
+    "weather_icon_url": "http://openweathermap.org/img/wn/04n@2x.png"
+}
