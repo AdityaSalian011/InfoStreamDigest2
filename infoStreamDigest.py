@@ -155,7 +155,8 @@ class InfoStreamDigest:
             """Passing data to html file"""
             folder_name = 'templates'
             html_file = 'index.html'
-                
+            rendered_file = 'rendered.html'
+
             env = Environment(loader=FileSystemLoader(folder_name))
             template = env.get_template(html_file)
 
@@ -183,6 +184,8 @@ class InfoStreamDigest:
                 else:
                     self._hide_loading()
                     show_success_message(f'We have sent you an email at {email_add}\nPlease check.')
+                    
+                    self.html_email.store_in_rendered_file(rendered_html, rendered_filepath=f'{folder_name}/{rendered_file}')
                     return
             else:
                 self._hide_loading()
